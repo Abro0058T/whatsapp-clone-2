@@ -16,7 +16,7 @@ export const initialState ={
 const reducer=(state,action)=>{
     switch (action.type){
         case reducerCases.SET_USER_INFO:
-            console.log(action.payload,action.useInfo)
+            // console.log(action.payload,action.useInfo)
             return{
                 ...state,
                 userInfo:action.useInfo
@@ -68,6 +68,13 @@ const reducer=(state,action)=>{
                 ...state,
                 onlineUsers: action.onlineUsers,
             }
+        case reducerCases.SET_CONTACT_SEARCH:
+            const filteredContacts = state.userContacts.filter((contact)=> contact.name.toLowerCase().includes(action.contactSearch.toLowerCase()))
+            return {
+                ...state,
+                contactSearch: action.contactSearch,
+                filteredContacts,
+            }
         default:
             return state
     }
@@ -76,4 +83,3 @@ const reducer=(state,action)=>{
 export default  reducer
 
 
-//8:14:42
