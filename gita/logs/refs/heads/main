@@ -1,0 +1,13 @@
+0000000000000000000000000000000000000000 073dcdc709b07c8639588c099981ae192acc1583 AbhiAtiUttam <Abhi@glocalize.net> 1720378896 +0530	commit (initial): first commit
+073dcdc709b07c8639588c099981ae192acc1583 073dcdc709b07c8639588c099981ae192acc1583 AbhiAtiUttam <Abhi@glocalize.net> 1720378896 +0530	Branch: renamed refs/heads/master to refs/heads/main
+073dcdc709b07c8639588c099981ae192acc1583 6be847e5a10fe05b1602c806bdfb3b4c88fbb633 AbhiAtiUttam <Abhi@glocalize.net> 1720378960 +0530	commit: initialized the app and implemented authentication
+6be847e5a10fe05b1602c806bdfb3b4c88fbb633 6377275b4bead880a80c4d8b08b7ce583e136afa AbhiAtiUttam <Abhi@glocalize.net> 1721855331 +0530	commit: Create main chat ui
+6377275b4bead880a80c4d8b08b7ce583e136afa 51c74e7f87e042d7daa2a604c1f064ce3a0b12fe AbhiAtiUttam <Abhi@glocalize.net> 1722153718 +0530	commit: added chat component
+51c74e7f87e042d7daa2a604c1f064ce3a0b12fe 92166f80b7f6b1837c6755a8166b95b75ae50828 AbhiAtiUttam <Abhi@glocalize.net> 1722159214 +0530	commit: started socket send and revieve code
+92166f80b7f6b1837c6755a8166b95b75ae50828 2ed67b7d7406fcc2ba1891c5973d62306300c043 AbhiAtiUttam <Abhi@glocalize.net> 1723373052 +0530	commit: added emoji picker
+2ed67b7d7406fcc2ba1891c5973d62306300c043 8d3d509d1eeb21e2693d979f154564482e4d9f47 AbhiAtiUttam <Abhi@glocalize.net> 1723481312 +0530	commit: imporved emoji feature
+8d3d509d1eeb21e2693d979f154564482e4d9f47 38308071e853d24449ffc653a7d243113bfdbc03 AbhiAtiUttam <Abhi@glocalize.net> 1723549388 +0530	commit: added image upload feature
+38308071e853d24449ffc653a7d243113bfdbc03 d467f90215b2815ef725484bf999b4b7c6fad64a AbhiAtiUttam <Abhi@glocalize.net> 1723719909 +0530	commit: completed audio message functionality
+d467f90215b2815ef725484bf999b4b7c6fad64a 655bb6e88a4baa800614f1d88cc299c90851c610 AbhiAtiUttam <Abhi@glocalize.net> 1723752668 +0530	commit: added search message function nality
+655bb6e88a4baa800614f1d88cc299c90851c610 6bc3353c0f8a8190d97bdc8844a8033d456a30e0 Abro0058T <abhiseknaulae@gmail.com> 1723753488 +0530	commit: commit from linux
+6bc3353c0f8a8190d97bdc8844a8033d456a30e0 0c3beefe713df2aae6bd396a0d9c7b93013a50a2 AbhiAtiUttam <Abhi@glocalize.net> 1723753431 +0530	commit: added comment to test the push command
