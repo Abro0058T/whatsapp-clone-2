@@ -13,18 +13,32 @@ import Chat from "./Chat/Chat";
 import { io } from "socket.io-client";
 import { measureMemory } from "vm";
 import SearchMessages from "./Chat/SearchMessages";
+import VideoCall from "./Call/VideoCall";
+import VoiceCall from "./Call/VoiceCall";
+import IncomingVideoCall from "./common/IncomingVideoCall";
+import IncomingCall from "./common/IncomingCall";
 
 function Main() {
   const router = useRouter();
-  const [{ userInfo,currentChatUser, messagesSearch }, dispatch] = useStateProvider();
+  const [
+    {
+      userInfo,
+      currentChatUser,
+      messagesSearch,
+      videoCall,
+      voiceCall,
+      incomingVoiceCall,
+      incomingVideoCall,
+    },
+    dispatch,
+  ] = useStateProvider();
   const [redirectLogin, setredirectLogin] = useState(false);
-  const [socketEvent, setsocketEvent] = useState(false)
-  const socket=useRef()
+  const [socketEvent, setsocketEvent] = useState(false);
+  const socket = useRef();
 
-  useEffect(()=>{
-    if(redirectLogin) router.push("/login")
-  },[redirectLogin])
-
+  useEffect(() => {
+    if (redirectLogin) router.push("/login");
+  }, [redirectLogin]);
 
   onAuthStateChanged(firebaseAuth, async (currentUser) => {
     if (!currentUser) setredirectLogin(true);
@@ -35,9 +49,15 @@ function Main() {
       if (!data?.status) {
         router.push("/login");
       }
-      console.log(data?.data)
-      if(data?.data){
-        const { id, name, email, profilePicture: profileImage, status } = data.data;
+      console.log(data?.data);
+      if (data?.data) {
+        const {
+          id,
+          name,
+          email,
+          profilePicture: profileImage,
+          status,
+        } = data.data;
         dispatch({
           type: reducerCases.SET_USER_INFO,
           useInfo: {
@@ -50,54 +70,104 @@ function Main() {
         });
       }
     }
-    });
-    
-    useEffect(()=>{
-      if(userInfo){
-        socket.current = io(HOST);
-        // console.log(userInfo,"user")
-        socket.current.emit("add-user",userInfo.id);
-        dispatch({type:reducerCases.SET_SOCKET,socket})
-      }
-    },[userInfo])
+  });
 
-    useEffect(()=>{
-      console.log(socketEvent,"socketEvent")
-      if(socket.current && !socketEvent) {
-        // console.log("Here in msg-recieve")
-        socket.current.on("msg-recieve",(data) => {
-          console.log(data,"Message recieved")
-          dispatch({type:reducerCases.ADD_MESSAGES,newMessage:{...data.message}})
-        })
-        setsocketEvent(true)
-      }
-    },[socket.current])
+  useEffect(() => {
+    if (userInfo) {
+      socket.current = io(HOST);
+      // console.log(userInfo,"user")
+      socket.current.emit("add-user", userInfo.id);
+      dispatch({ type: reducerCases.SET_SOCKET, socket });
+    }
+  }, [userInfo]);
 
-    useEffect(()=>{
+  useEffect(() => {
+    console.log(socketEvent, "socketEvent");
+    if (socket.current && !socketEvent) {
+      // console.log("Here in msg-recieve")
+      socket.current.on("msg-recieve", (data) => {
+        console.log(data, "Message recieved");
+        dispatch({
+          type: reducerCases.ADD_MESSAGES,
+          newMessage: { ...data.message },
+        });
+      });
 
-      const getMessages = async () => {
-        const {data:{messages}} = await axios.get(`${GET_MESSAGES_ROUTE}/${userInfo?.id}/${currentChatUser?.id}`)
-        dispatch({type:reducerCases.SET_MESSAGES,messages})
-      }
-      if(currentChatUser?.id){
-        getMessages()
-      }
-    },[currentChatUser])
+      socket.current.on("incoming-voice-call", ({ from, roomId, callType }) => {
 
-    return (
-      <>
-      <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
-        <ChatList />
-        {
-          currentChatUser ?  <div className={messagesSearch ? "grid grid-cols-2":"gird-cols-2"}>
-            <Chat/> 
-            {
-              messagesSearch && <SearchMessages/>
-            }
-          </div>
-          : <Empty/>
-        }
-      </div>
+        dispatch({
+          type: reducerCases.SET_INCOMING_VOICE_CALL,
+          incomingVoiceCall: { ...from, roomId, callType },
+        });
+      });
+
+      socket.current.on("incoming-video-call", ({ from, roomId, callType }) => {
+        dispatch({
+          type: reducerCases.SET_INCOMING_VIDEO_CALL,
+          incomingVideoCall: { ...from, roomId, callType },
+        });
+      });
+
+      socket.current.on("voice-call-rejected", () => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+      socket.current.on("video-call-rejected", () => {
+        dispatch({
+          type: reducerCases.END_CALL,
+        });
+      });
+
+
+      setsocketEvent(true);
+    }
+  }, [socket.current]);
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const {
+        data: { messages },
+      } = await axios.get(
+        `${GET_MESSAGES_ROUTE}/${userInfo?.id}/${currentChatUser?.id}`
+      );
+      dispatch({ type: reducerCases.SET_MESSAGES, messages });
+    };
+    if (currentChatUser?.id) {
+      getMessages();
+    }
+  }, [currentChatUser]);
+
+  return (
+    <>
+
+    {incomingVideoCall && <IncomingVideoCall/>}
+    {incomingVoiceCall && <IncomingCall/>}
+      {videoCall && (
+        <div className="h-screen w-screen max-h-full overflow-hidden ">
+          <VideoCall />
+        </div>
+      )}
+      {voiceCall && (
+        <div className="h-screen w-screen max-h-full overflow-hidden ">
+          <VoiceCall />
+        </div>
+      )}
+      {!videoCall && !voiceCall && (
+        <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
+          <ChatList />
+          {currentChatUser ? (
+            <div
+              className={messagesSearch ? "grid grid-cols-2" : "gird-cols-2"}
+            >
+              <Chat />
+              {messagesSearch && <SearchMessages />}
+            </div>
+          ) : (
+            <Empty />
+          )}
+        </div>
+      )}
     </>
   );
 }
