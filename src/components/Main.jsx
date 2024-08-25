@@ -119,7 +119,12 @@ function Main() {
         });
       });
 
-
+      socket.current.on("online-users",({onlineUsers})=>{
+        dispatch({
+          type:reducerCases.SET_ONLINE_USERS,
+          onlineUsers,
+        })
+      })
       setsocketEvent(true);
     }
   }, [socket.current]);
