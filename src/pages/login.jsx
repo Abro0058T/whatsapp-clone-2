@@ -24,7 +24,7 @@ function login() {
     try{
       if(email){
         console.log("here")
-        const {data}=await axios.post(`${CHECK_USER_ROUTE}`,{email});
+        const {data}=await axios.post(CHECK_USER_ROUTE,{email});
         
         if(!data.status){
           dispatch({type:reducerCases.SET_NEW_USER,newUser:true})
